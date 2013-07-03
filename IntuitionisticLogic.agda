@@ -59,12 +59,6 @@ elim∧₁ < a , b > = a
 elim∧₂ : {A B : Proposition} → A ∧ B → B
 elim∧₂ < a , b > = b
 
-lemma₁ : {A : Proposition} → A → A ∧ ⊤
-lemma₁ a = < a , true >
-
-lemma₂ : {A : Proposition} → A ∧ ⊤ → ⊤
-lemma₂ < a , true > = true
-
 -- DISJUNCTION
 
 data _∨_ (A B : Proposition) : Proposition where
@@ -217,5 +211,11 @@ axiom₁₀ = λ {A} {B} → intro⊃ (λ x → intro⊃ (λ x₁ → elim⊥ (x
 
 -- SOME THEOREMS
 
-theorem₁ : {A : Proposition} → A ⊃ ¬ (¬ A)
-theorem₁ = λ {A} → intro⊃ (λ x x₁ → x₁ x)
+theorem₁ : {A : Proposition} → A → A ∧ ⊤
+theorem₁ a = < a , true >
+
+theorem₂ : {A : Proposition} → A ∧ ⊤ → ⊤
+theorem₂ < a , true > = true
+
+theorem₃ : {A : Proposition} → A ⊃ ¬ (¬ A)
+theorem₃ = λ {A} → intro⊃ (λ x x₁ → x₁ x)
