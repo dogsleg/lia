@@ -89,7 +89,7 @@ A ≡ B = (A ⊃ B) ∧ (B ⊃ A)
 
 -- UNIVERSAL QUANTIFIER
 
-data Forall (A : Set) (B : A → Set) : Proposition where
+data Forall (A : Set) (B : A → Proposition) : Proposition where
   intro∀ : ((a : A) → B a) → Forall A B
 
 -- EXISTENTIAL QUANTIFIER
@@ -133,19 +133,13 @@ distributivity⊃⊃ : {A B C : Proposition} → A ⊃ (B ⊃ C) → (A ⊃ B) �
 distributivity⊃⊃ = {!!}
 
 transitivity⊃ : {A B C : Proposition} → (A ⊃ B) → (B ⊃ C) → (A ⊃ C)
-transitivity⊃ = {!!}
+transitivity⊃ (intro⊃ x) (intro⊃ x₁) = intro⊃ (λ x₂ → x₁ (x x₂))
 
 reflexivity⊃ : {A : Proposition} → A ⊃ A
 reflexivity⊃ = λ {A} → intro⊃ (λ z → z)
 
-totality⊃ : {A B : Proposition} → (A ⊃ B) ∨ (B ⊃ A)
-totality⊃ = λ {A} {B} → intro∨₁ (intro⊃  (λ x → {!!}))
-
 distributivity¬∨ : {A B : Proposition} → ¬ (A ∨ B) → ¬ A ∧ ¬ B
 distributivity¬∨ = λ x → <  (λ z → x (intro∨₁ z)) , (λ z → x (intro∨₂ z)) >
-
-distributivity¬∧ : {A B : Proposition} → ¬ (A ∧ B) → ¬ A ∨ ¬ B
-distributivity¬∧ = λ x → intro∨₁ {!intro∧!}
 
 -- AXIOMS
 
@@ -219,3 +213,12 @@ theorem₂ < a , true > = true
 
 theorem₃ : {A : Proposition} → A ⊃ ¬ (¬ A)
 theorem₃ = λ {A} → intro⊃ (λ x x₁ → x₁ x)
+
+theorem₄ : {A : Proposition} → ¬ (¬ (A ∨ ¬ A))
+theorem₄ = λ {A} z → z (intro∨₂ (λ x → z (intro∨₁ x)))
+
+theorem₅ : {A B : Proposition} → (¬ A ∧ ¬ B) ⊃ ¬ (A ∨ B)
+theorem₅ = {!!}
+
+theorem₆ : {A B : Proposition} → (((A ⊃ A) ⊃ B) ∧ A) ⊃ B
+theorem₆ = {!!}
