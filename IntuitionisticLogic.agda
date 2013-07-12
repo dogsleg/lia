@@ -195,21 +195,21 @@ axiom₁₀ = λ {A} {B} → intro⊃ (λ x → intro⊃ (λ x₁ → elim⊥ (x
 
 -- Axiom 11
 
--- universal quantification
--- ∀xA(x) ⊃ A(t)
+axiom₁₁ : {A : Set} {B : A → Proposition} {t : A} → Forall A (λ x → B x) ⊃ B t
+axiom₁₁ = λ {A} {B} {t} → intro⊃ (λ x → {!!})
 
 -- Axiom 12
 
--- existentional quantification
--- A(t) ⊃ ∃xA(x)
+axiom₁₂ : {A : Set} {B : A → Proposition} {t : A} → B t ⊃ Exists A (λ x → B x)
+axiom₁₂ = λ {A} {B} {t} → intro⊃ (intro∃ t)
 
 -- SOME THEOREMS
 
-theorem₁ : {A : Proposition} → A → A ∧ ⊤
-theorem₁ a = < a , true >
+theorem₁ : {A : Proposition} → A ⊃ (A ∧ ⊤)
+theorem₁ = λ {A} → intro⊃ (λ x → < x , true >)
 
-theorem₂ : {A : Proposition} → A ∧ ⊤ → ⊤
-theorem₂ < a , true > = true
+theorem₂ : {A : Proposition} → (A ∧ ⊤) ⊃ ⊤
+theorem₂ = λ {A} → intro⊃ (λ x → true)
 
 theorem₃ : {A : Proposition} → A ⊃ ¬ (¬ A)
 theorem₃ = λ {A} → intro⊃ (λ x x₁ → x₁ x)
@@ -217,8 +217,8 @@ theorem₃ = λ {A} → intro⊃ (λ x x₁ → x₁ x)
 theorem₄ : {A : Proposition} → ¬ (¬ (A ∨ ¬ A))
 theorem₄ = λ {A} z → z (intro∨₂ (λ x → z (intro∨₁ x)))
 
-theorem₅ : {A B : Proposition} → (¬ A ∧ ¬ B) ⊃ ¬ (A ∨ B)
+theorem₅ : {A B : Proposition} → (¬ A ∧ ¬ B) → ¬ (A ∨ B)
 theorem₅ = {!!}
 
 theorem₆ : {A B : Proposition} → (((A ⊃ A) ⊃ B) ∧ A) ⊃ B
-theorem₆ = {!!}
+theorem₆ = λ {A} {B} → intro⊃ (λ x → {!!})
