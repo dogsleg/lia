@@ -205,6 +205,9 @@ axiom₁₂ = λ {A} {B} {t} → intro⊃ (intro∃ t)
 
 -- SOME THEOREMS
 
+theorem₀ : {A : Proposition} → ¬(A) ≡ ¬(¬(¬(A)))
+theorem₀ = λ {A} → < (intro⊃ (λ z z₁ → z₁ z)) , (intro⊃ (λ z z₁ → z (λ z₂ → z₂ z₁))) >
+
 theorem₁ : {A : Proposition} → A ⊃ (A ∧ ⊤)
 theorem₁ = λ {A} → intro⊃ (λ x → < x , true >)
 
