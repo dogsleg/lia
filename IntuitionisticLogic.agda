@@ -217,8 +217,8 @@ theorem₃ = λ {A} → intro⊃ (λ x x₁ → x₁ x)
 theorem₄ : {A : Proposition} → ¬ (¬ (A ∨ ¬ A))
 theorem₄ = λ {A} z → z (intro∨₂ (λ x → z (intro∨₁ x)))
 
-theorem₅ : {A B : Proposition} → (¬ A ∧ ¬ B) → ¬ (A ∨ B)
+theorem₅ : {A B : Proposition} → (¬ A ∧ ¬ B) ⊃ ¬ (A ∨ B)
 theorem₅ = {!!}
 
 theorem₆ : {A B : Proposition} → (((A ⊃ A) ⊃ B) ∧ A) ⊃ B
-theorem₆ = λ {A} {B} → intro⊃ (λ x → {!!})
+theorem₆ = {!!}
