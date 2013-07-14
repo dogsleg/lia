@@ -99,47 +99,42 @@ data Exists (A : Set) (B : A → Set) : Proposition where
 
 -- PROPERTIES
 
-commutativity∧ : {A B : Proposition} → A ∧ B → B ∧ A
-commutativity∧ < a , b > = < b , a >
+commutativity∧ : {A B : Proposition} → (A ∧ B) ≡ (B ∧ A)
+commutativity∧ = λ {A} {B} → < (intro⊃ (λ x → < (elim∧₂ x) , (elim∧₁ x) >)) , (intro⊃ (λ x → < (elim∧₂ x) , (elim∧₁ x) >)) >
 
-associativity∧ : {A B C : Proposition} → A ∧ (B ∧ C) → (A ∧ B) ∧ C
-associativity∧ < a , < b , c > > = < < a , b > , c >
+associativity∧ : {A B C : Proposition} → (A ∧ (B ∧ C)) ≡ ((A ∧ B) ∧ C)
+associativity∧ = λ {A} {B} {C} → < (intro⊃ (λ x → < < (elim∧₁ x) , (elim∧₁ (elim∧₂ x)) > , (elim∧₂ (elim∧₂ x)) >)) , (intro⊃ (λ x → < (elim∧₁ (elim∧₁ x)) , < (elim∧₂ (elim∧₁ x)) , (elim∧₂ x) > >)) >
 
-distributivity∧∨ : {A B C : Proposition} → A ∧ (B ∨ C) → (A ∧ B) ∨ (A ∧ C)
-distributivity∧∨ < x , intro∨₁ x₁ > = intro∨₁ < x , x₁ >
-distributivity∧∨ < x , intro∨₂ x₁ > = intro∨₂ < x , x₁ >
+distributivity∧∨ : {A B C : Proposition} → (A ∧ (B ∨ C)) ≡ ((A ∧ B) ∨ (A ∧ C))
+distributivity∧∨ = {!!}
 
-idempotency∧ : {A : Proposition} → A ∧ A → A
-idempotency∧ a = elim∧₁ a
+idempotency∧ : {A : Proposition} → (A ∧ A) ≡ A
+idempotency∧ = λ {A} → < (intro⊃ (λ x → elim∧₁ x)) , (intro⊃ (λ x → < x , x >)) >
 
-commutativity∨ : {A B : Proposition} → A ∨ B → B ∨ A
-commutativity∨ (intro∨₁ x) = intro∨₂ x
-commutativity∨ (intro∨₂ x) = intro∨₁ x
+commutativity∨ : {A B : Proposition} → (A ∨ B) ≡ (B ∨ A)
+commutativity∨ = λ {A} {B} → < (intro⊃ (λ x → elim∨ x intro∨₂ intro∨₁)) , (intro⊃ (λ x → elim∨ x intro∨₂ intro∨₁)) >
 
-associativity∨ : {A B C : Proposition} → A ∨ (B ∨ C) → (A ∨ B) ∨ C
-associativity∨ (intro∨₁ x) = intro∨₁ (intro∨₁ x)
-associativity∨ (intro∨₂ (intro∨₁ x)) = intro∨₁ (intro∨₂ x)
-associativity∨ (intro∨₂ (intro∨₂ x)) = intro∨₂ x
+associativity∨ : {A B C : Proposition} → (A ∨ (B ∨ C)) ≡ ((A ∨ B) ∨ C)
+associativity∨ = {!!}
 
-distributivity∨∧ : {A B C : Proposition} → A ∨ (B ∧ C) → (A ∨ B) ∧ (A ∨ C)
-distributivity∨∧ (intro∨₁ x) = < intro∨₁ x , intro∨₁ x >
-distributivity∨∧ (intro∨₂ < x , y >) = < intro∨₂ x , intro∨₂ y >
+distributivity∨∧ : {A B C : Proposition} → (A ∨ (B ∧ C)) ≡ ((A ∨ B) ∧ (A ∨ C))
+distributivity∨∧ = λ {A} {B} {C} → < (intro⊃ (λ x → < (elim∨ x intro∨₁ (λ x₁ → intro∨₂ (elim∧₁ x₁))) , (elim∨ x intro∨₁ (λ x₁ → intro∨₂ (elim∧₂ x₁))) >)) , {!!} >
 
-idempotency∨ : {A : Proposition} → A ∨ A → A
-idempotency∨ (intro∨₁ x) = x
-idempotency∨ (intro∨₂ x) = x
+idempotency∨ : {A : Proposition} → (A ∨ A) ≡ A
+idempotency∨ = λ {A} → < (intro⊃ (λ x → elim∨ x (λ z → z) (λ z → z))) , (intro⊃ (λ x → intro∨₁ x)) >
 
-distributivity⊃⊃ : {A B C : Proposition} → A ⊃ (B ⊃ C) → (A ⊃ B) ⊃ (A ⊃ C)
+distributivity⊃⊃ : {A B C : Proposition} → (A ⊃ (B ⊃ C)) ≡ ((A ⊃ B) ⊃ (A ⊃ C))
 distributivity⊃⊃ = {!!}
 
-transitivity⊃ : {A B C : Proposition} → (A ⊃ B) → (B ⊃ C) → (A ⊃ C)
-transitivity⊃ (intro⊃ x) (intro⊃ x₁) = intro⊃ (λ x₂ → x₁ (x x₂))
+transitivity⊃ : {A B C : Proposition} → (A ⊃ B) ⊃ ((B ⊃ C) ⊃ (A ⊃ C))
+transitivity⊃ = {!!}
+-- transitivity⊃ (intro⊃ x) (intro⊃ x₁) = intro⊃ (λ x₂ → x₁ (x x₂))
 
 reflexivity⊃ : {A : Proposition} → A ⊃ A
 reflexivity⊃ = λ {A} → intro⊃ (λ z → z)
 
-distributivity¬∨ : {A B : Proposition} → ¬ (A ∨ B) → ¬ A ∧ ¬ B
-distributivity¬∨ = λ x → <  (λ z → x (intro∨₁ z)) , (λ z → x (intro∨₂ z)) >
+distributivity¬∨ : {A B : Proposition} → (¬(A ∨ B)) ⊃ (¬(A) ∧ ¬(B))
+distributivity¬∨ = λ {A} {B} → intro⊃ (λ x → < (λ x₁ → x (intro∨₁ x₁)) , (λ x₁ → x (intro∨₂ x₁)) >)
 
 -- AXIOMS
 
@@ -219,9 +214,3 @@ theorem₃ = λ {A} → intro⊃ (λ x x₁ → x₁ x)
 
 theorem₄ : {A : Proposition} → ¬ (¬ (A ∨ ¬ A))
 theorem₄ = λ {A} z → z (intro∨₂ (λ x → z (intro∨₁ x)))
-
-theorem₅ : {A B : Proposition} → (¬ A ∧ ¬ B) ⊃ ¬ (A ∨ B)
-theorem₅ = {!!}
-
-theorem₆ : {A B : Proposition} → (((A ⊃ A) ⊃ B) ∧ A) ⊃ B
-theorem₆ = {!!}
