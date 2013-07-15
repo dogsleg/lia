@@ -107,11 +107,8 @@ elim∀ (intro∀ proof-constructor) t = proof-constructor t
 data Exists (A : Set) (B : A → Proposition) : Proposition where
   intro∃ : (a : A) → B a → Exists A B
 
--- Because the logic is constructive, a proof of an existential
--- statement (∃x. B x) contains the term t for which (B t) holds.
-
-elim∃₁ : {A : Set} {B : A → Proposition} → Exists A B → A
-elim∃₁ (intro∃ t proof-of-B[t]) = t
+elim∃ : {A : Set} {B : A → Proposition} → Exists A B → A
+elim∃ (intro∃ t proof-of-B[t]) = t
 
 -- PROPERTIES
 
@@ -208,7 +205,7 @@ axiom₁ = λ {A} {B} → intro⊃ (λ z → intro⊃ (λ _ → z))
 -- Axiom 2, S combinator
 
 axiom₂ : {A B C : Proposition} → (A ⊃ B) ⊃ ((A ⊃ (B ⊃ C)) ⊃ (A ⊃ C))
-axiom₂ = λ {A} {B} {C} → intro⊃ (λ x → intro⊃ (λ x₁ → intro⊃ (λ x₂ → {!!})))
+axiom₂ = λ {A} {B} {C} → intro⊃ (λ x → intro⊃ (λ x₁ → intro⊃ (λ x₂ → elim⊃ (intro⊃ (λ z → z)) (elim⊃ (elim⊃ x₁ x₂) (elim⊃ x x₂)))))
 
 -- Axiom 3
 
@@ -267,7 +264,7 @@ admissible₁ : {A B : Set} → A ∨ B → A ⊎ B
 admissible₁ = λ x → elim∨ x inj₁ inj₂
 
 -- Kleene's existence property (Kleene (1945, 1952))
-admissible₂ : {A : Set} {B : A → Proposition} → (p : Exists A B) → B (elim∃₁ p)
+admissible₂ : {A : Set} {B : A → Proposition} → (p : Exists A B) → B (elim∃ p)
 admissible₂ (intro∃ t proof-of-B[t]) = proof-of-B[t]
 
 -- SOME THEOREMS
