@@ -92,10 +92,19 @@ A ≡ B = (A ⊃ B) ∧ (B ⊃ A)
 data Forall (A : Set) (B : A → Proposition) : Proposition where
   intro∀ : ((a : A) → B a) → Forall A B
 
+elim∀ : {A : Set} {B : A → Proposition} → Forall A B → (t : A) → B t
+elim∀ (intro∀ proof-constructor) t = proof-constructor t
+
 -- EXISTENTIAL QUANTIFIER
 
-data Exists (A : Set) (B : A → Set) : Proposition where
+data Exists (A : Set) (B : A → Proposition) : Proposition where
   intro∃ : (a : A) → B a → Exists A B
+
+-- Because the logic is constructive, a proof of an existential
+-- statement (∃x. B x) contains the term t for which (B t) holds.
+
+elim∃₁ : {A : Set} {B : A → Proposition} → Exists A B → A
+elim∃₁ (intro∃ t proof-of-B[t]) = t
 
 -- PROPERTIES
 
@@ -106,7 +115,53 @@ associativity∧ : {A B C : Proposition} → (A ∧ (B ∧ C)) ≡ ((A ∧ B) �
 associativity∧ = λ {A} {B} {C} → < (intro⊃ (λ x → < < (elim∧₁ x) , (elim∧₁ (elim∧₂ x)) > , (elim∧₂ (elim∧₂ x)) >)) , (intro⊃ (λ x → < (elim∧₁ (elim∧₁ x)) , < (elim∧₂ (elim∧₁ x)) , (elim∧₂ x) > >)) >
 
 distributivity∧∨ : {A B C : Proposition} → (A ∧ (B ∨ C)) ≡ ((A ∧ B) ∨ (A ∧ C))
-distributivity∧∨ = {!!}
+distributivity∧∨ =
+
+  < -- Part I of ≡: (A ∧ (B ∨ C)) ⊃ ((A ∧ B) ∨ (A ∧ C))
+    intro⊃
+
+      -- Since the logic is constructive,
+      -- we can assume the existence of a proof of (A ∧ (B ∨ C))
+      -- whenever we assume (A ∧ (B ∨ C)).
+      -- Let's call the proof pf-A∧[B∨C].
+      (λ pf-A∧[B∨C] →
+      let
+        -- Get a proof of A out of the proof of (A ∧ (B ∨ C))
+        pf-A   = elim∧₁ pf-A∧[B∨C]
+        -- Get a proof of (B ∨ C) out of the proof of (A ∧ (B ∨ C))
+        pf-B∨C = elim∧₂ pf-A∧[B∨C]
+      in
+        -- We don't know if B or C is true,
+        -- so we perform a case-analysis using ∨-elimination.
+        elim∨ pf-B∨C
+          -- Case I.1: B is true.
+          (λ pf-B → intro∨₁ < pf-A , pf-B >)
+          -- Case I.2: C is true
+          (λ pf-C → intro∨₂ < pf-A , pf-C >))
+
+  , -- Part II of ≡: ((A ∧ B) ∨ (A ∧ C)) ⊃ (A ∧ (B ∨ C))
+    intro⊃
+
+    -- Again, assume a proof of ((A ∧ B) ∨ (A ∧ C)).
+    (λ pf-[A∧B]∨[A∧C] →
+    -- Case-analysis becomes the first step, for we know not
+    -- whether (A ∧ B) or (A ∧ C) is true.
+    elim∨ pf-[A∧B]∨[A∧C]
+      -- Case II.1: (A ∧ B) is true
+      (λ pf-A∧B →
+      let
+        pf-A = elim∧₁ pf-A∧B
+        pf-B = elim∧₂ pf-A∧B
+      in
+        < pf-A , intro∨₁ pf-B >)
+      -- Case II.2: (A ∧ C) is true
+      (λ pf-A∧C →
+      let
+        pf-A = elim∧₁ pf-A∧C
+        pf-C = elim∧₂ pf-A∧C
+      in
+        < pf-A , intro∨₂ pf-C >))
+  >
 
 idempotency∧ : {A : Proposition} → (A ∧ A) ≡ A
 idempotency∧ = λ {A} → < (intro⊃ (λ x → elim∧₁ x)) , (intro⊃ (λ x → < x , x >)) >
@@ -191,12 +246,20 @@ axiom₁₀ = λ {A} {B} → intro⊃ (λ x → intro⊃ (λ x₁ → elim⊥ (x
 -- Axiom 11
 
 axiom₁₁ : {A : Set} {B : A → Proposition} {t : A} → Forall A (λ x → B x) ⊃ B t
-axiom₁₁ = λ {A} {B} {t} → intro⊃ (λ x → {!!})
+axiom₁₁ = λ {A} {B} {t} → intro⊃ (λ pf-∀x-B[x] → elim∀ pf-∀x-B[x] t)
 
 -- Axiom 12
 
 axiom₁₂ : {A : Set} {B : A → Proposition} {t : A} → B t ⊃ Exists A (λ x → B x)
 axiom₁₂ = λ {A} {B} {t} → intro⊃ (intro∃ t)
+
+-- Axiom 13
+-- (ED) of plato.stanford.edu/entries/logic-intuitionistic
+-- If ∃x. B(x) is a closed theorem, then for some closed term t, B(t) is a theorem.
+-- ... not only that, but we know also exactly the term t for which B(t) holds.
+
+axiom₁₃ : {A : Set} {B : A → Proposition} → (p : Exists A B) → B (elim∃₁ p)
+axiom₁₃ (intro∃ t proof-of-B[t]) = proof-of-B[t]
 
 -- SOME THEOREMS
 
