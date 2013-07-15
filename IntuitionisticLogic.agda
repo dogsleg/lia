@@ -257,9 +257,12 @@ axiom₁₂ = λ {A} {B} {t} → intro⊃ (intro∃ t)
 
 -- ADMISSIBLE RULES
 
--- Kleene's existence property (Kleene (1945, 1952)
-admissible₁ : {A : Set} {B : A → Proposition} → (p : Exists A B) → B (elim∃₁ p)
-admissible₁ (intro∃ t proof-of-B[t]) = proof-of-B[t]
+-- Gödel's disjunction property (Gödel (1932))
+
+
+-- Kleene's existence property (Kleene (1945, 1952))
+admissible₂ : {A : Set} {B : A → Proposition} → (p : Exists A B) → B (elim∃₁ p)
+admissible₂ (intro∃ t proof-of-B[t]) = proof-of-B[t]
 
 -- SOME THEOREMS
 
@@ -282,5 +285,6 @@ theorem₄ = λ {A} z → z (intro∨₂ (λ x → z (intro∨₁ x)))
 -- REFERENCES
 
 -- Brouwer, L. E. J., 1919, "Intuitionistische Mengenlehre," Jahresber. Dtsch.Math.Ver., 28: 203–208.
+-- Gödel, K., 1932, "Zum intuitionistischen Aussagenkalkül," Anzeiger der Akademie der Wissenschaftischen in Wien 69: 65–66.
 -- Kleene, S. C., 1945, "On the interpretation of intuitionistic number theory," Jour. Symb. Logic, 10: 109–124.
 -- Kleene, S. C., 1952, Introduction to Metamathematics, Princeton: Van Nostrand.
