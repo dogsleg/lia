@@ -35,6 +35,11 @@ Contents:
 
 -}
 
+-- IMPORTS
+
+open import Data.Sum
+
+--
 
 Proposition = Set
 
@@ -258,7 +263,8 @@ axiom₁₂ = λ {A} {B} {t} → intro⊃ (intro∃ t)
 -- ADMISSIBLE RULES
 
 -- Gödel's disjunction property (Gödel (1932))
-
+admissible₁ : {A B : Set} → A ∨ B → A ⊎ B
+admissible₁ = λ x → elim∨ x inj₁ inj₂
 
 -- Kleene's existence property (Kleene (1945, 1952))
 admissible₂ : {A : Set} {B : A → Proposition} → (p : Exists A B) → B (elim∃₁ p)
