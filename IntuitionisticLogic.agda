@@ -174,10 +174,10 @@ commutativity∨ : {A B : Proposition} → (A ∨ B) ≡ (B ∨ A)
 commutativity∨ = λ {A} {B} → < (intro⊃ (λ x → elim∨ x intro∨₂ intro∨₁)) , (intro⊃ (λ x → elim∨ x intro∨₂ intro∨₁)) >
 
 associativity∨ : {A B C : Proposition} → (A ∨ (B ∨ C)) ≡ ((A ∨ B) ∨ C)
-associativity∨ = {!!}
+associativity∨ = λ {A} {B} {C} → < (intro⊃ (λ x → {!!})) , (intro⊃ (λ x → {!!})) >
 
 distributivity∨∧ : {A B C : Proposition} → (A ∨ (B ∧ C)) ≡ ((A ∨ B) ∧ (A ∨ C))
-distributivity∨∧ = λ {A} {B} {C} → < (intro⊃ (λ x → < (elim∨ x intro∨₁ (λ x₁ → intro∨₂ (elim∧₁ x₁))) , (elim∨ x intro∨₁ (λ x₁ → intro∨₂ (elim∧₂ x₁))) >)) , {!!} >
+distributivity∨∧ = λ {A} {B} {C} → < (intro⊃ (λ x → < (elim∨ x intro∨₁ (λ x₁ → intro∨₂ (elim∧₁ x₁))) , (elim∨ x intro∨₁ (λ x₁ → intro∨₂ (elim∧₂ x₁))) >)) , intro⊃ (λ x → {!!}) >
 
 idempotency∨ : {A : Proposition} → (A ∨ A) ≡ A
 idempotency∨ = λ {A} → < (intro⊃ (λ x → elim∨ x (λ z → z) (λ z → z))) , (intro⊃ (λ x → intro∨₁ x)) >
