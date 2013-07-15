@@ -186,8 +186,7 @@ distributivity⊃⊃ : {A B C : Proposition} → (A ⊃ (B ⊃ C)) ≡ ((A ⊃ B
 distributivity⊃⊃ = {!!}
 
 transitivity⊃ : {A B C : Proposition} → (A ⊃ B) ⊃ ((B ⊃ C) ⊃ (A ⊃ C))
-transitivity⊃ = {!!}
--- transitivity⊃ (intro⊃ x) (intro⊃ x₁) = intro⊃ (λ x₂ → x₁ (x x₂))
+transitivity⊃ = λ {A} {B} {C} → intro⊃ (λ x → intro⊃ (λ x₁ → intro⊃ (λ x₂ → elim⊃ x₁ (elim⊃ x x₂))))
 
 reflexivity⊃ : {A : Proposition} → A ⊃ A
 reflexivity⊃ = λ {A} → intro⊃ (λ z → z)
