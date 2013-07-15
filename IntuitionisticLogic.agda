@@ -219,7 +219,7 @@ admissible₁ = λ x → elim∨ x inj₁ inj₂
 
 -- Kleene's existence property (Kleene (1945, 1952))
 admissible₂ : {A : Set} {B : A → Proposition} → (p : Exists A B) → B (elim∃ p)
-admissible₂ (intro∃ t proof-of-B[t]) = proof-of-B[t]
+admissible₂ (intro∃ a x) = x
 
 -- SOME THEOREMS
 
