@@ -29,7 +29,9 @@ Contents:
 ∘ Definitions of logical connectives
 ∘ Properties of logical connectives
 ∘ Axioms
+∘ Admissible rules
 ∘ Some theorems
+∘ References
 
 -}
 
@@ -253,16 +255,15 @@ axiom₁₁ = λ {A} {B} {t} → intro⊃ (λ pf-∀x-B[x] → elim∀ pf-∀x-B
 axiom₁₂ : {A : Set} {B : A → Proposition} {t : A} → B t ⊃ Exists A (λ x → B x)
 axiom₁₂ = λ {A} {B} {t} → intro⊃ (intro∃ t)
 
--- Axiom 13
--- (ED) of plato.stanford.edu/entries/logic-intuitionistic
--- If ∃x. B(x) is a closed theorem, then for some closed term t, B(t) is a theorem.
--- ... not only that, but we know also exactly the term t for which B(t) holds.
+-- ADMISSIBLE RULES
 
-axiom₁₃ : {A : Set} {B : A → Proposition} → (p : Exists A B) → B (elim∃₁ p)
-axiom₁₃ (intro∃ t proof-of-B[t]) = proof-of-B[t]
+-- Kleene's existence property (Kleene (1945, 1952)
+admissible₁ : {A : Set} {B : A → Proposition} → (p : Exists A B) → B (elim∃₁ p)
+admissible₁ (intro∃ t proof-of-B[t]) = proof-of-B[t]
 
 -- SOME THEOREMS
 
+-- Brouwer (1919)
 theorem₀ : {A : Proposition} → ¬(A) ≡ ¬(¬(¬(A)))
 theorem₀ = λ {A} → < (intro⊃ (λ z z₁ → z₁ z)) , (intro⊃ (λ z z₁ → z (λ z₂ → z₂ z₁))) >
 
@@ -277,3 +278,9 @@ theorem₃ = λ {A} → intro⊃ (λ x x₁ → x₁ x)
 
 theorem₄ : {A : Proposition} → ¬ (¬ (A ∨ ¬ A))
 theorem₄ = λ {A} z → z (intro∨₂ (λ x → z (intro∨₁ x)))
+
+-- REFERENCES
+
+-- Brouwer, L. E. J., 1919, "Intuitionistische Mengenlehre," Jahresber. Dtsch.Math.Ver., 28: 203–208.
+-- Kleene, S. C., 1945, "On the interpretation of intuitionistic number theory," Jour. Symb. Logic, 10: 109–124.
+-- Kleene, S. C., 1952, Introduction to Metamathematics, Princeton: Van Nostrand.
