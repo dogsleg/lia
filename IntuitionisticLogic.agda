@@ -248,7 +248,7 @@ axiom₁₀ = λ {A} {B} → intro⊃ (λ x → intro⊃ (λ x₁ → elim⊥ (x
 -- Axiom 11
 
 axiom₁₁ : {A : Set} {B : A → Proposition} {t : A} → Forall A (λ x → B x) ⊃ B t
-axiom₁₁ = λ {A} {B} {t} → intro⊃ (λ pf-∀x-B[x] → elim∀ pf-∀x-B[x] t)
+axiom₁₁ = λ {A} {B} {t} → intro⊃ (λ x → elim∀ x t)
 
 -- Axiom 12
 
