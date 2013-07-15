@@ -26,6 +26,7 @@ Notation:
 
 Contents:
 
+∘ Imports
 ∘ Definitions of logical connectives
 ∘ Properties of logical connectives
 ∘ Axioms
@@ -39,23 +40,23 @@ Contents:
 
 open import Data.Sum
 
---
+-- DEFINITIONS OF LOGICAL CONNECTIVES
 
 Proposition = Set
 
--- TOP
+-- Top
 
 data ⊤ : Proposition where
   true : ⊤
 
--- BOTTOM
+-- Bottom
 
 data ⊥ : Proposition where
 
 elim⊥ : {A : Proposition} → ⊥ → A
 elim⊥()
 
--- CONJUNCTION
+-- Conjunction
 
 data _∧_ (A B : Proposition) : Proposition where
   <_,_> : A → B → A ∧ B
@@ -66,7 +67,7 @@ elim∧₁ < a , b > = a
 elim∧₂ : {A B : Proposition} → A ∧ B → B
 elim∧₂ < a , b > = b
 
--- DISJUNCTION
+-- Disjunction
 
 data _∨_ (A B : Proposition) : Proposition where
   intro∨₁ : A → A ∨ B
@@ -76,7 +77,7 @@ elim∨ : {A B C : Proposition} → A ∨ B → (A → C) → (B → C) → C
 elim∨ (intro∨₁ x) b c = b x
 elim∨ (intro∨₂ x) b c = c x
 
--- IMPLICATION
+-- Implication
 
 data _⊃_ (A B : Proposition) : Proposition where
   intro⊃ : (A → B) → A ⊃ B
@@ -84,17 +85,17 @@ data _⊃_ (A B : Proposition) : Proposition where
 elim⊃ : {A B : Proposition} → A ⊃ B → A → B
 elim⊃ (intro⊃ x) = x
 
--- NEGATION
+-- Negation
 
 ¬ : Proposition → Proposition
 ¬ A = A → ⊥
 
--- EQUIVALENCE
+-- Equivalence
 
 _≡_ : Proposition → Proposition → Proposition
 A ≡ B = (A ⊃ B) ∧ (B ⊃ A)
 
--- UNIVERSAL QUANTIFIER
+-- Universal quantifier
 
 data Forall (A : Set) (B : A → Proposition) : Proposition where
   intro∀ : ((a : A) → B a) → Forall A B
@@ -102,7 +103,7 @@ data Forall (A : Set) (B : A → Proposition) : Proposition where
 elim∀ : {A : Set} {B : A → Proposition} → Forall A B → (t : A) → B t
 elim∀ (intro∀ proof-constructor) t = proof-constructor t
 
--- EXISTENTIAL QUANTIFIER
+-- Existential quantifier
 
 data Exists (A : Set) (B : A → Proposition) : Proposition where
   intro∃ : (a : A) → B a → Exists A B
@@ -110,7 +111,7 @@ data Exists (A : Set) (B : A → Proposition) : Proposition where
 elim∃ : {A : Set} {B : A → Proposition} → Exists A B → A
 elim∃ (intro∃ t proof-of-B[t]) = t
 
--- PROPERTIES
+-- PROPERTIES OF LOGICAL CONNECTIVES
 
 commutativity∧ : {A B : Proposition} → (A ∧ B) ≡ (B ∧ A)
 commutativity∧ = λ {A} {B} → < (intro⊃ (λ x → < (elim∧₂ x) , (elim∧₁ x) >)) , (intro⊃ (λ x → < (elim∧₂ x) , (elim∧₁ x) >)) >
