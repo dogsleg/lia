@@ -183,7 +183,7 @@ idempotency∨ : {A : Proposition} → (A ∨ A) ≡ A
 idempotency∨ = λ {A} → < (intro⊃ (λ x → elim∨ x (λ z → z) (λ z → z))) , (intro⊃ (λ x → intro∨₁ x)) >
 
 distributivity⊃⊃ : {A B C : Proposition} → (A ⊃ (B ⊃ C)) ≡ ((A ⊃ B) ⊃ (A ⊃ C))
-distributivity⊃⊃ = {!!}
+distributivity⊃⊃ = λ {A} {B} {C} → < (intro⊃ (λ x → intro⊃ (λ x₁ → intro⊃ (λ x₂ → elim⊃ (elim⊃ x x₂) (elim⊃ x₁ x₂))))) , (intro⊃ (λ x → intro⊃ (λ x₁ → intro⊃ (λ x₂ → elim⊃ (elim⊃ x (intro⊃ (λ _ → x₂))) x₁)))) >
 
 transitivity⊃ : {A B C : Proposition} → (A ⊃ B) ⊃ ((B ⊃ C) ⊃ (A ⊃ C))
 transitivity⊃ = λ {A} {B} {C} → intro⊃ (λ x → intro⊃ (λ x₁ → intro⊃ (λ x₂ → elim⊃ x₁ (elim⊃ x x₂))))
