@@ -111,9 +111,17 @@ data Exists (A : Set) (B : A → Proposition) : Proposition where
 elim∃ : {A : Set} {B : A → Proposition} → Exists A B → A
 elim∃ (intro∃ t proof-of-B[t]) = t
 
+-- PRECEDENCE
+
+infix 10 _≡_
+infix 30 _⊃_
+infix 50 _∨_
+infix 70 _∧_
+infix 90 ¬
+
 -- PROPERTIES OF LOGICAL CONNECTIVES
 
-commutativity∧ : {A B : Proposition} → (A ∧ B) ≡ (B ∧ A)
+commutativity∧ : {A B : Proposition} → A ∧ B ≡ B ∧ A
 commutativity∧ = λ {A} {B} → < (intro⊃ (λ x → < (elim∧₂ x) , (elim∧₁ x) >)) , (intro⊃ (λ x → < (elim∧₂ x) , (elim∧₁ x) >)) >
 
 associativity∧ : {A B C : Proposition} → (A ∧ (B ∧ C)) ≡ ((A ∧ B) ∧ C)
@@ -122,10 +130,10 @@ associativity∧ = λ {A} {B} {C} → < (intro⊃ (λ x → < < (elim∧₁ x) ,
 distributivity∧∨ : {A B C : Proposition} → (A ∧ (B ∨ C)) ≡ ((A ∧ B) ∨ (A ∧ C))
 distributivity∧∨ = λ {A} {B} {C} → < (intro⊃ (λ x → elim∨ (elim∧₂ x) (λ x₁ → elim∧₁ < (intro∨₁ < (elim∧₁ x) , x₁ >) , x₁ >) (λ x₁ → elim∧₂ < x₁ , (intro∨₂ < (elim∧₁ x) , x₁ >) >))) , intro⊃ (λ x → elim∨ x (λ x₁ → < (elim∧₁ x₁) , (intro∨₁ (elim∧₂ x₁)) >) (λ x₁ → < (elim∧₁ x₁) , (intro∨₂ (elim∧₂ x₁)) >)) >
 
-idempotency∧ : {A : Proposition} → (A ∧ A) ≡ A
+idempotency∧ : {A : Proposition} → A ∧ A ≡ A
 idempotency∧ = λ {A} → < (intro⊃ (λ x → elim∧₁ x)) , (intro⊃ (λ x → < x , x >)) >
 
-commutativity∨ : {A B : Proposition} → (A ∨ B) ≡ (B ∨ A)
+commutativity∨ : {A B : Proposition} → A ∨ B ≡ B ∨ A
 commutativity∨ = λ {A} {B} → < (intro⊃ (λ x → elim∨ x intro∨₂ intro∨₁)) , (intro⊃ (λ x → elim∨ x intro∨₂ intro∨₁)) >
 
 associativity∨ : {A B C : Proposition} → (A ∨ (B ∨ C)) ≡ ((A ∨ B) ∨ C)
@@ -134,7 +142,7 @@ associativity∨ = λ {A} {B} {C} → < (intro⊃ (λ x → {!!})) , (intro⊃ (
 distributivity∨∧ : {A B C : Proposition} → (A ∨ (B ∧ C)) ≡ ((A ∨ B) ∧ (A ∨ C))
 distributivity∨∧ = λ {A} {B} {C} → < (intro⊃ (λ x → < (elim∨ x intro∨₁ (λ x₁ → intro∨₂ (elim∧₁ x₁))) , (elim∨ x intro∨₁ (λ x₁ → intro∨₂ (elim∧₂ x₁))) >)) , intro⊃ (λ x → {!!}) >
 
-idempotency∨ : {A : Proposition} → (A ∨ A) ≡ A
+idempotency∨ : {A : Proposition} → A ∨ A ≡ A
 idempotency∨ = λ {A} → < (intro⊃ (λ x → elim∨ x (λ z → z) (λ z → z))) , (intro⊃ (λ x → intro∨₁ x)) >
 
 distributivity⊃⊃ : {A B C : Proposition} → (A ⊃ (B ⊃ C)) ≡ ((A ⊃ B) ⊃ (A ⊃ C))
@@ -146,7 +154,7 @@ transitivity⊃ = λ {A} {B} {C} → intro⊃ (λ x → intro⊃ (λ x₁ → in
 reflexivity⊃ : {A : Proposition} → A ⊃ A
 reflexivity⊃ = λ {A} → intro⊃ (λ z → z)
 
-distributivity¬∨ : {A B : Proposition} → (¬(A ∨ B)) ⊃ (¬(A) ∧ ¬(B))
+distributivity¬∨ : {A B : Proposition} → ¬(A ∨ B) ⊃ ¬ A ∧ ¬ B
 distributivity¬∨ = λ {A} {B} → intro⊃ (λ x → < (λ x₁ → x (intro∨₁ x₁)) , (λ x₁ → x (intro∨₂ x₁)) >)
 
 -- AXIOMS
@@ -163,32 +171,32 @@ axiom₂ = λ {A} {B} {C} → intro⊃ (λ x → intro⊃ (λ x₁ → intro⊃ 
 
 -- Axiom 3
 
-axiom₃ : {A B : Proposition} → A ⊃ (B ⊃ (A ∧ B))
+axiom₃ : {A B : Proposition} → A ⊃ (B ⊃ A ∧ B)
 axiom₃ = λ {A} {B} → intro⊃ (λ z → intro⊃ (<_,_> z))
 
 -- Axiom 4
 
-axiom₄ : {A B : Proposition} → (A ∧ B) ⊃ A
+axiom₄ : {A B : Proposition} → A ∧ B ⊃ A
 axiom₄ = λ {A} {B} → intro⊃ (λ x → elim∧₁ x)
 
 -- Axiom 5
 
-axiom₅ : {A B : Proposition} → (A ∧ B) ⊃ B
+axiom₅ : {A B : Proposition} → A ∧ B ⊃ B
 axiom₅ = λ {A} {B} → intro⊃ (λ x → elim∧₂ x)
 
 -- Axiom 6
 
-axiom₆ : {A B : Proposition} → A ⊃ (A ∨ B)
+axiom₆ : {A B : Proposition} → A ⊃ A ∨ B
 axiom₆ = λ {A} {B} → intro⊃ intro∨₁
 
 -- Axiom 7
 
-axiom₇ : {A B : Proposition} → B ⊃ (A ∨ B)
+axiom₇ : {A B : Proposition} → B ⊃ A ∨ B
 axiom₇ = λ {A} {B} → intro⊃ intro∨₂
 
 -- Axiom 8
 
-axiom₈ : {A B C : Proposition} → (A ⊃ C) ⊃ ((B ⊃ C) ⊃ ((A ∨ B) ⊃ C))
+axiom₈ : {A B C : Proposition} → (A ⊃ C) ⊃ ((B ⊃ C) ⊃ (A ∨ B ⊃ C))
 axiom₈ = λ {A} {B} {C} → intro⊃ (λ x → intro⊃ (λ x₁ → intro⊃ (λ x₂ → elim∨ x₂ (λ x₃ → elim⊃ x x₃) (λ x₃ → elim⊃ x₁ x₃))))
 
 -- Axiom 9
@@ -224,19 +232,19 @@ admissible₂ (intro∃ a x) = x
 -- SOME THEOREMS
 
 -- Brouwer (1919)
-theorem₀ : {A : Proposition} → ¬(A) ≡ ¬(¬(¬(A)))
+theorem₀ : {A : Proposition} → ¬ A ≡ ¬(¬(¬ A))
 theorem₀ = λ {A} → < (intro⊃ (λ z z₁ → z₁ z)) , (intro⊃ (λ z z₁ → z (λ z₂ → z₂ z₁))) >
 
-theorem₁ : {A : Proposition} → A ⊃ (A ∧ ⊤)
+theorem₁ : {A : Proposition} → A ⊃ A ∧ ⊤
 theorem₁ = λ {A} → intro⊃ (λ x → < x , true >)
 
-theorem₂ : {A : Proposition} → (A ∧ ⊤) ⊃ ⊤
+theorem₂ : {A : Proposition} → A ∧ ⊤ ⊃ ⊤
 theorem₂ = λ {A} → intro⊃ (λ x → true)
 
 theorem₃ : {A : Proposition} → A ⊃ ¬ (¬ A)
 theorem₃ = λ {A} → intro⊃ (λ x x₁ → x₁ x)
 
-theorem₄ : {A : Proposition} → ¬ (¬ (A ∨ ¬ A))
+theorem₄ : {A : Proposition} → ¬(¬(A ∨ ¬ A))
 theorem₄ = λ {A} z → z (intro∨₂ (λ x → z (intro∨₁ x)))
 
 -- REFERENCES
