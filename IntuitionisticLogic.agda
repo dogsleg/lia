@@ -22,7 +22,7 @@ Notation:
 ∨ : disjuntion
 ⊃ : implication
 ¬ : negation
-⇔ : equivalence
+≡ : equivalence
 
 Contents:
 
