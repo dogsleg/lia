@@ -133,7 +133,7 @@ distributivity∧∨ = λ {A} {B} {C} → < (intro⊃ (λ x → elim∨ (elim∧
 idempotency∧ : {A : Proposition} → A ∧ A ≡ A
 idempotency∧ = λ {A} → < (intro⊃ (λ x → elim∧₁ x)) , (intro⊃ (λ x → < x , x >)) >
 
--- Is it possible to generalize monotonicity of → to ≡? Should look for counter-examples...
+-- Is it possible to generalize monotonicity from → to ≡? Should look for counter-examples...
 monotonicity∧ : {A B C : Proposition} → (A ⊃ B) → ((A ∧ C) ⊃ (B ∧ C))
 monotonicity∧ = λ x → intro⊃ (λ x₁ → < (elim⊃ x (elim∧₁ x₁)) , (elim∧₂ x₁) >)
 
