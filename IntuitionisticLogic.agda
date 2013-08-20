@@ -133,6 +133,13 @@ distributivity∧∨ = λ {A} {B} {C} → < (intro⊃ (λ x → elim∨ (elim∧
 idempotency∧ : {A : Proposition} → A ∧ A ≡ A
 idempotency∧ = λ {A} → < (intro⊃ (λ x → elim∧₁ x)) , (intro⊃ (λ x → < x , x >)) >
 
+-- Is it possible to generalize monotonicity of → to ≡? Should look for counter-examples...
+monotonicity∧ : {A B C : Proposition} → (A ⊃ B) → ((A ∧ C) ⊃ (B ∧ C))
+monotonicity∧ = λ x → intro⊃ (λ x₁ → < (elim⊃ x (elim∧₁ x₁)) , (elim∧₂ x₁) >)
+
+falsehood-preserving∧ : {A B : Proposition} → A ∧ B → A ∨ B
+falsehood-preserving∧ = λ x → intro∨₁ (elim∧₁ x)
+
 commutativity∨ : {A B : Proposition} → A ∨ B ≡ B ∨ A
 commutativity∨ = λ {A} {B} → < (intro⊃ (λ x → elim∨ x intro∨₂ intro∨₁)) , (intro⊃ (λ x → elim∨ x intro∨₂ intro∨₁)) >
 
@@ -157,6 +164,22 @@ reflexivity⊃ = λ {A} → intro⊃ (λ z → z)
 distributivity¬∨ : {A B : Proposition} → ¬(A ∨ B) ⊃ ¬ A ∧ ¬ B
 distributivity¬∨ = λ {A} {B} → intro⊃ (λ x → < (λ x₁ → x (intro∨₁ x₁)) , (λ x₁ → x (intro∨₂ x₁)) >)
 
+commutativity≡ : {A B : Proposition} → (A ≡ B) ≡ (B ≡ A)
+commutativity≡ = λ {A} {B} → < (intro⊃ (λ x → < (elim∧₂ x) , (elim∧₁ x) >)) , (intro⊃ (λ x → < (elim∧₂ x) , (elim∧₁ x) >)) >
+
+associativity≡ : {A B C : Proposition} → (A ≡ (B ≡ C)) ≡ ((A ≡ B) ≡ C)
+associativity≡ = λ {A} {B} {C} → < (intro⊃ (λ x → < (intro⊃ (λ x₁ → {!!})) 
+  , (intro⊃ (λ x₁ → < intro⊃ (λ x₂ → elim⊃ (elim∧₂ (elim⊃ (elim∧₁ x) x₂)) x₁) 
+  , intro⊃ (λ x₂ → elim⊃ (elim∧₂ x) < intro⊃ (λ _ → x₁) ,  intro⊃ (λ _ → x₂) >) >)) >)) 
+  , intro⊃ (λ x → < (intro⊃ (λ x₁ → < (intro⊃ (λ x₂ → elim⊃ (elim∧₁ x) < (intro⊃ (λ _ → x₂)) , (intro⊃ (λ _ → x₁)) >)) 
+  , intro⊃ (λ x₂ → elim⊃ (elim∧₁ (elim⊃ (elim∧₂ x) x₂)) x₁) >)) 
+  , intro⊃ (λ x₁ → elim⊃ (elim∧₂ (elim⊃ (elim∧₂ x) {!!})) {!!}) >) >
+
+truth-preserving≡ : {A B : Proposition} → A ∧ B → A ≡ B
+truth-preserving≡ = λ x → < (intro⊃ (λ x₁ → elim∧₂ x)) , (intro⊃ (λ x₁ → elim∧₁ x)) >
+
+
+ 
 -- AXIOMS
 
 -- Axiom 1, K combinator
