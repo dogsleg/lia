@@ -235,12 +235,12 @@ axiom₉ = λ {A} {B} {C} → intro⊃ (λ x → intro⊃ (λ x₁ x₂ → elim
 axiom₁₀ : {A B : Proposition} → ¬ A ⊃ (A ⊃ B)
 axiom₁₀ = λ {A} {B} → intro⊃ (λ x → intro⊃ (λ x₁ → elim⊥ (x x₁)))
 
--- Axiom 11
+-- Axiom 11, ∀xA(x) ⊃ A(t)
 
 axiom₁₁ : {A : Set} {B : A → Proposition} {t : A} → Forall A (λ x → B x) ⊃ B t
 axiom₁₁ = λ {A} {B} {t} → intro⊃ (λ x → x t)
 
--- Axiom 12
+-- Axiom 12, A(t) ⊃ ∃xA(x)
 
 axiom₁₂ : {A : Set} {B : A → Proposition} {t : A} → B t ⊃ Exists A (λ x → B x)
 axiom₁₂ = λ {A} {B} {t} → intro⊃ ( [_,_] t )
