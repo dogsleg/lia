@@ -38,7 +38,7 @@ Contents:
 
 -- IMPORTS
 
-open import Data.Sum
+open import Data.Sum hiding ([_,_])
 
 -- DEFINITIONS OF LOGICAL CONNECTIVES
 
@@ -97,19 +97,25 @@ A ≡ B = (A ⊃ B) ∧ (B ⊃ A)
 
 -- Universal quantifier
 
-data Forall (A : Set) (B : A → Proposition) : Proposition where
-  intro∀ : ((a : A) → B a) → Forall A B
+Forall : (A : Set) -> (B : A -> Set) -> Set
+Forall A B = (x : A) -> B x
 
-elim∀ : {A : Set} {B : A → Proposition} → Forall A B → (t : A) → B t
+data Forall' (A : Set) (B : A → Proposition) : Proposition where
+  intro∀ : ((a : A) → B a) → Forall' A B
+
+elim∀ : {A : Set} {B : A → Proposition} → Forall' A B → (t : A) → B t
 elim∀ (intro∀ proof-constructor) t = proof-constructor t
 
 -- Existential quantifier
 
 data Exists (A : Set) (B : A → Proposition) : Proposition where
-  intro∃ : (a : A) → B a → Exists A B
+  [_,_] : (a : A) → B a → Exists A B
 
-elim∃ : {A : Set} {B : A → Proposition} → Exists A B → A
-elim∃ (intro∃ t proof-of-B[t]) = t
+elim∃₁ : {A : Set} {B : A → Proposition} → Exists A B → A
+elim∃₁ [ a , b ] = a
+
+elim∃₂ : {A : Set} {B : A → Proposition} → (p : Exists A B) → B (elim∃₁ p)
+elim∃₂ [ a , b ] = b
 
 -- PRECEDENCE
 
@@ -133,7 +139,6 @@ distributivity∧∨ = λ {A} {B} {C} → < (intro⊃ (λ x → elim∨ (elim∧
 idempotency∧ : {A : Proposition} → A ∧ A ≡ A
 idempotency∧ = λ {A} → < (intro⊃ (λ x → elim∧₁ x)) , (intro⊃ (λ x → < x , x >)) >
 
--- Is it possible to generalize monotonicity from → to ≡? Should look for counter-examples...
 monotonicity∧ : {A B C : Proposition} → (A ⊃ B) → ((A ∧ C) ⊃ (B ∧ C))
 monotonicity∧ = λ x → intro⊃ (λ x₁ → < (elim⊃ x (elim∧₁ x₁)) , (elim∧₂ x₁) >)
 
@@ -177,8 +182,6 @@ associativity≡ = λ {A} {B} {C} → < (intro⊃ (λ x → < (intro⊃ (λ x₁
 
 truth-preserving≡ : {A B : Proposition} → A ∧ B → A ≡ B
 truth-preserving≡ = λ x → < (intro⊃ (λ x₁ → elim∧₂ x)) , (intro⊃ (λ x₁ → elim∧₁ x)) >
-
-
  
 -- AXIOMS
 
@@ -235,22 +238,22 @@ axiom₁₀ = λ {A} {B} → intro⊃ (λ x → intro⊃ (λ x₁ → elim⊥ (x
 -- Axiom 11
 
 axiom₁₁ : {A : Set} {B : A → Proposition} {t : A} → Forall A (λ x → B x) ⊃ B t
-axiom₁₁ = λ {A} {B} {t} → intro⊃ (λ x → elim∀ x t)
+axiom₁₁ = λ {A} {B} {t} → intro⊃ (λ x → x t)
 
 -- Axiom 12
 
 axiom₁₂ : {A : Set} {B : A → Proposition} {t : A} → B t ⊃ Exists A (λ x → B x)
-axiom₁₂ = λ {A} {B} {t} → intro⊃ (intro∃ t)
+axiom₁₂ = λ {A} {B} {t} → intro⊃ ( [_,_] t )
 
 -- ADMISSIBLE RULES
 
--- Gödel's disjunction property (Gödel (1932))
+-- Gödel's disjunction property (Gödel (1932)), if ⊢ A∨B, then ⊢ A or ⊢ B
 admissible₁ : {A B : Set} → A ∨ B → A ⊎ B
 admissible₁ = λ x → elim∨ x inj₁ inj₂
 
--- Kleene's existence property (Kleene (1945, 1952))
-admissible₂ : {A : Set} {B : A → Proposition} → (p : Exists A B) → B (elim∃ p)
-admissible₂ (intro∃ a x) = x
+-- Kleene's existence property (Kleene (1945, 1952)), if ⊢ ∃xP(x), then for some closed term t, ⊢ P(t)
+admissible₂ : {A : Set} {B : A → Proposition} → (p : Exists A B) → B (elim∃₁ p)
+admissible₂ [ a , x ] = x
 
 -- SOME THEOREMS
 
@@ -269,6 +272,10 @@ theorem₃ = λ {A} → intro⊃ (λ x x₁ → x₁ x)
 
 theorem₄ : {A : Proposition} → ¬(¬(A ∨ ¬ A))
 theorem₄ = λ {A} z → z (intro∨₂ (λ x → z (intro∨₁ x)))
+
+-- ∀x¬P(x) ⊃ ¬∃xP(x)
+theorem₅ : {A : Set} {P : A → Proposition} → Forall A (λ a → ¬(P a)) → ¬(Exists A (λ a → P a))
+theorem₅ = λ x x₁ → x (elim∃₁ x₁) (elim∃₂ x₁)
 
 -- REFERENCES
 
