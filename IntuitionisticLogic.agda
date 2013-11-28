@@ -29,6 +29,7 @@ Contents:
 ∘ Imports
 ∘ Definitions of logical connectives
 ∘ Properties of logical connectives
+∘ Relations between logical connectives
 ∘ Axioms
 ∘ Admissible rules
 ∘ Some theorems
@@ -182,7 +183,73 @@ associativity≡ = λ {A} {B} {C} → < (intro⊃ (λ x → < (intro⊃ (λ x₁
 
 truth-preserving≡ : {A B : Proposition} → A ∧ B → A ≡ B
 truth-preserving≡ = λ x → < (intro⊃ (λ x₁ → elim∧₂ x)) , (intro⊃ (λ x₁ → elim∧₁ x)) >
- 
+
+-- RELATIONS BETWEEN LOGICAL CONNECTIVES
+
+-- Conjunction vs. disjunction
+
+cvd₁ : {A B : Proposition} → A ∧ B → ¬(¬(A) ∨ ¬(B))
+cvd₁ = λ x x₁ → elim∨ x₁ (λ x₂ → x₂ (elim∧₁ x)) (λ x₂ → x₂ (elim∧₂ x))
+
+cvd₂ : {A B : Proposition} → A ∨ B → ¬(¬(A) ∧ ¬(B))
+cvd₂ = λ x x₁ → elim∨ x (elim∧₁ x₁) (elim∧₂ x₁)
+
+cvd₃ : {A B : Proposition} → ¬(A) ∨ ¬(B) → ¬(A ∧ B)
+cvd₃ = λ x x₁ → elim∨ x (λ x₂ → x₂ (elim∧₁ x₁)) (λ x₂ → x₂ (elim∧₂ x₁))
+
+cvd₄ : {A B : Proposition} → ¬(A) ∧ ¬(B) ≡ ¬(A ∨ B)
+cvd₄ = λ {A} {B} → < (intro⊃ (λ x x₁ → elim∧₁ (elim∨ x₁ (λ x₂ → < (elim∧₁ x x₂) , {!!} >) (λ x₂ → < (elim∧₂ x x₂) , {!!} >)))) , (intro⊃ (λ x → < (λ x₁ → x (intro∨₁ x₁)) , (λ x₁ → x (intro∨₂ x₁)) >)) >
+
+-- Conjunction vs. implication
+
+cvi₁ : {A B : Proposition} → A ∧ B → ¬(A → ¬(B))
+cvi₁ = λ x x₁ → x₁ (elim∧₁ x) (elim∧₂ x)
+
+cvi₂ : {A B : Proposition} → A ⊃ B → ¬(A ∧ ¬(B))
+cvi₂ = λ x x₁ → elim∧₂ x₁ (elim⊃ x (elim∧₁ x₁))
+
+cvi₃ : {A B : Proposition} → A ∧ ¬(B) → ¬(A → B)
+cvi₃ = λ x x₁ → elim∧₂ x (x₁ (elim∧₁ x))
+
+cvi₄ : {A B : Proposition} → A ⊃ ¬(B) ≡ ¬(A ∧ B)
+cvi₄ = λ {A} {B} → < (intro⊃ (λ x x₁ → elim⊃ x (elim∧₁ x₁) (elim∧₂ x₁))) , (intro⊃ (λ x → intro⊃ (λ x₁ x₂ → x < x₁ , x₂ >))) >
+
+-- Disjunction vs. implication
+
+dvi₁ : {A B : Proposition} → A ∨ B → ¬(A) ⊃ B
+dvi₁ = λ x → intro⊃ (λ x₁ → elim∨ x (λ x₂ → elim⊥ (x₁ x₂)) (λ x₂ → x₂))
+
+dvi₂ : {A B : Proposition} → ¬(A) ∨ B → A ⊃ B
+dvi₂ = λ x → intro⊃ (λ x₁ → elim∨ x (λ x₂ → elim⊥ (x₂ x₁)) (λ x₂ → x₂))
+
+-- Unversal quantifier vs. existential quantifier
+
+uve₁ : {A : Set} {B : A → Proposition} → Forall A (λ x → B x) → ¬(Exists A (λ x → ¬(B x)))
+uve₁ = {!!}
+
+uve₂ : {A : Set} {B : A → Proposition} → Exists A (λ x → B x) → ¬(Forall A (λ x → ¬(B x)))
+uve₂ = {!!}
+
+uve₃ : {A : Set} {B : A → Proposition} → Exists A (λ x → ¬(B x)) → ¬(Forall A (λ x → B x))
+uve₃ = {!!}
+
+uve₄ : {A : Set} {B : A → Proposition} → Forall A (λ x → ¬(B x)) → ¬(Exists A (λ x → B x))
+uve₄ = {!!}
+
+-- Equivalences
+
+equiv₁ : {A B : Proposition} → (A ⊃ B) ≡ ((A ∨ B) ≡ B)
+equiv₁ = {!!}
+
+equiv₂ : {A B : Proposition} → (A ⊃ B) ≡ ((A ∧ B) ≡ A)
+equiv₂ = {!!}
+
+equiv₃ : {A B : Proposition} → (A ∧ B) ≡ ((A ⊃ B) ⊃ A)
+equiv₃ = {!!}
+
+equiv₄ : {A B : Proposition} → (A ∧ B) ≡ (((A ∨ B) ≡ B) ≡ A)
+equiv₄ = {!!}
+
 -- AXIOMS
 
 -- Axiom 1, K combinator
